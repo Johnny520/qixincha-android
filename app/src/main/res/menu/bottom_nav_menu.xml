@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/tab_search" />
+    <item
+        android:id="@+id/nav_follow"
+        android:icon="@drawable/ic_follow"
+        android:title="@string/tab_follow" />
+    <item
+        android:id="@+id/nav_compare"
+        android:icon="@drawable/ic_compare"
+        android:title="@string/tab_compare" />
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/tab_settings" />
+</menu>

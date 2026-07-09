@@ -8,4 +8,13 @@
     <color name="ok">#2E7D32</color>
     <color name="warn">#EF6C00</color>
     <color name="err">#C62828</color>
+
+    <!-- 导航栏选中/未选中 -->
+    <color name="nav_selected">#1565C0</color>
+    <color name="nav_unselected">#9AA3AF</color>
+    <!-- 分割线 / 边框 -->
+    <color name="divider">#E5E7EB</color>
+    <!-- 标签底色（浅蓝） -->
+    <color name="chip_bg">#E3F2FD</color>
+    <color name="chip_text">#1565C0</color>
 </resources>

@@ -25,9 +25,9 @@
             android:label="企业详情" />
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".InfoActivity"
             android:exported="false"
-            android:label="设置" />
+            android:label="关于" />
 
     </application>
 </manifest>

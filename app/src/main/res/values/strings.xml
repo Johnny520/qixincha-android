@@ -1,13 +1,76 @@
 <resources>
     <string name="app_name">企信查</string>
+
+    <!-- 导航 -->
+    <string name="tab_search">搜索</string>
+    <string name="tab_follow">关注</string>
+    <string name="tab_compare">对比</string>
+    <string name="tab_settings">设置</string>
+
+    <!-- 搜索 -->
     <string name="search_hint">输入企业名称，如：腾讯</string>
     <string name="search_btn">搜索</string>
     <string name="empty_tip">输入企业名称开始查询</string>
-    <string name="settings_title">设置</string>
-    <string name="api_key_hint">API Key（可选，留空走网页抓取）</string>
-    <string name="save">保存</string>
     <string name="no_result">未找到相关企业，可尝试更换关键词或检查网络。</string>
     <string name="loading">查询中…</string>
     <string name="net_error">网络异常，请检查网络连接。</string>
-    <string name="about">企信查 · Java 原生版\n类天眼查企业信息查询\n兼容 Android 7–16</string>
+
+    <!-- 关注 -->
+    <string name="follow_empty">还没有关注的企业</string>
+    <string name="follow_empty_sub">在搜索结果中可加入关注</string>
+    <string name="follow_add">关注</string>
+    <string name="follow_remove">已关注</string>
+
+    <!-- 对比 -->
+    <string name="compare_a">企业 A</string>
+    <string name="compare_b">企业 B</string>
+    <string name="compare_start">开始对比</string>
+    <string name="compare_no_data">暂无对比数据</string>
+    <string name="compare_empty">请输入两家企业名称进行对比</string>
+
+    <!-- 设置 -->
+    <string name="settings_title">设置</string>
+    <string name="api_key_hint">API Key（可选，留空走网页抓取）</string>
+    <string name="save">保存</string>
+    <string name="settings_data_source">数据来源（免费 API 密钥，可选）</string>
+    <string name="key_apibyte">ApiByte 密钥</string>
+    <string name="key_juhe">聚合数据(Juhe) 密钥</string>
+    <string name="key_jisu">极速数据(Jisu) 密钥</string>
+    <string name="key_xxapi">XXApi 密钥</string>
+    <string name="settings_scrape">无密钥时启用网页兜底抓取</string>
+    <string name="settings_scrape_desc">未配置密钥时，App 会通过网页抓取提供基础信息；填入密钥后可获取完整工商数据。</string>
+    <string name="settings_repair">修复中心</string>
+    <string name="settings_repair_desc">如遇网络异常、配置损坏、缓存错误，可一键诊断与修复。</string>
+    <string name="settings_run_repair">运行修复</string>
+    <string name="settings_repair_report">修复报告</string>
+    <string name="settings_about">关于 / 法律</string>
+    <string name="about_title">关于企信查</string>
+    <string name="about_text">企信查 · Java 原生 Android 版\n类天眼查企业信息查询工具\n兼容 Android 7–16（官方 SDK，无第三方运行时，闪退风险最低）</string>
+    <string name="disclaimer_title">免责声明</string>
+    <string name="disclaimer_text">本软件（企信查）仅供学习与研究使用，不得用于任何商业或违法用途。\n\n软件所展示的企业信息来自公开网页的自动抓取，数据准确性、完整性、及时性均不作保证，请以国家企业信用信息公示系统或企业官方披露为准。\n\n使用本软件所产生的任何后果由使用者自行承担，开发者不承担任何法律责任。</string>
+    <string name="agreement_title">用户协议</string>
+    <string name="agreement_text">1. 您确认已年满 18 周岁或已获得监护人同意使用本软件。\n\n2. 您承诺仅将本软件用于合法的学习与研究目的，不用于侵犯他人权益或违反法律法规的活动。\n\n3. 软件数据来源于公开网络，可能存在误差，开发者不保证数据的准确性与可用性。\n\n4. 开发者保留在合理范围内修改、暂停或终止服务的权利。\n\n5. 本协议解释权归开发者所有。</string>
+    <string name="privacy_title">隐私政策</string>
+    <string name="privacy_text">本软件高度重视用户隐私：\n\n1. 本软件不收集、不上传任何个人身份信息。\n\n2. 您填写的 API 密钥仅保存在本机 SharedPreferences 中，不会向外发送。\n\n3. 搜索请求直接发送至公开搜索引擎，不经过任何第三方中转服务器。\n\n4. 本机会缓存搜索与详情结果以加快访问，缓存仅存于内存，关闭应用即释放。\n\n如您不同意上述条款，请立即停止使用本软件。</string>
+    <string name="version_label">版本</string>
+
+    <!-- 详情字段 -->
+    <string name="detail_credit">统一社会信用代码</string>
+    <string name="detail_legal">法定代表人</string>
+    <string name="detail_status">登记状态</string>
+    <string name="detail_capital">注册资本</string>
+    <string name="detail_date">成立日期</string>
+    <string name="detail_addr">注册地址</string>
+    <string name="detail_shareholders">股东</string>
+    <string name="detail_changes">变更记录</string>
+    <string name="detail_keypersons">主要人员</string>
+    <string name="detail_investments">对外投资</string>
+    <string name="detail_branches">分支机构</string>
+    <string name="detail_sources">数据来源</string>
+    <string name="detail_tip_default">未配置 API 密钥，仅展示基础信息（来自网页抓取）。可在「设置」中填入免费 API 密钥以获取完整工商数据。</string>
+
+    <!-- 通用 -->
+    <string name="back">返回</string>
+    <string name="startup_fixed">本次启动已自动修复 %d 项</string>
+    <string name="copied">已复制</string>
 </resources>
