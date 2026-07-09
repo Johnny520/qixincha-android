@@ -16,7 +16,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
-import com.qxx.johnny.BuildConfig;
 import com.qxx.johnny.InfoActivity;
 import com.qxx.johnny.MainActivity;
 import com.qxx.johnny.R;
@@ -98,9 +97,7 @@ public class SettingsFragment extends Fragment {
             final List<RepairCenter.RepairResult> report = repair.runRepair();
             requireActivity().runOnUiThread(() -> showReport(report));
         }).start();
-    }
-
-    private void showReport(List<RepairCenter.RepairResult> report) {
+  List<RepairCenter.RepairResult> report) {
         StringBuilder sb = new StringBuilder();
         for (RepairCenter.RepairResult r : report) {
             String mark = r.ok ? "✓ " : (r.fixed ? "🔧 " : "✗ ");
