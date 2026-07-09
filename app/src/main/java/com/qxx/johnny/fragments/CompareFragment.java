@@ -20,6 +20,8 @@ import com.qxx.johnny.R;
 import com.qxx.johnny.model.Company;
 import com.qxx.johnny.net.CompanyFetcher;
 
+import java.util.Map;
+
 public class CompareFragment extends Fragment {
     private EditText etA;
     private EditText etB;
