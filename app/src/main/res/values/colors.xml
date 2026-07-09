@@ -1,0 +1,11 @@
+<resources>
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="bg">#F5F7FA</color>
+    <color name="card">#FFFFFF</color>
+    <color name="text">#1A1A1A</color>
+    <color name="sub">#6B7280</color>
+    <color name="ok">#2E7D32</color>
+    <color name="warn">#EF6C00</color>
+    <color name="err">#C62828</color>
+</resources>

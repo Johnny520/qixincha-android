@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">企信查</string>
+    <string name="search_hint">输入企业名称，如：腾讯</string>
+    <string name="search_btn">搜索</string>
+    <string name="empty_tip">输入企业名称开始查询</string>
+    <string name="settings_title">设置</string>
+    <string name="api_key_hint">API Key（可选，留空走网页抓取）</string>
+    <string name="save">保存</string>
+    <string name="no_result">未找到相关企业，可尝试更换关键词或检查网络。</string>
+    <string name="loading">查询中…</string>
+    <string name="net_error">网络异常，请检查网络连接。</string>
+    <string name="about">企信查 · Java 原生版\n类天眼查企业信息查询\n兼容 Android 7–16</string>
+</resources>
