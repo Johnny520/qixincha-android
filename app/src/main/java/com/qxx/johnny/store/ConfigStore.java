@@ -98,4 +98,27 @@ public class ConfigStore {
         } catch (Exception ignore) {
         }
     }
+
+    /**
+     * 真正检测配置是否损坏（供 RepairCenter.checkConfig 使用）：
+     *  1) 类型校验：关键 key（如 follow_list）存在但类型异常（非 Set）即视为损坏；
+     *  2) 读写回环：写测试值再读回比对，SharedPreferences 不可写/读即视为损坏。
+     * 未写入的 key 返回 null 属首装正常，不算损坏。
+     */
+    public boolean isCorrupted() {
+        try {
+            Object follow = sp.getAll().get("follow_list");
+            if (follow != null && !(follow instanceof Set)) return true;
+
+            String probe = "qxc_probe_" + System.currentTimeMillis();
+            SharedPreferences.Editor e = sp.edit();
+            e.putString("__qxc_probe__", probe);
+            if (!e.commit()) return true;
+            String back = sp.getString("__qxc_probe__", null);
+            sp.edit().remove("__qxc_probe__").commit();
+            return !probe.equals(back);
+        } catch (Exception ex) {
+            return true;
+        }
+    }
 }

@@ -32,6 +32,8 @@ public class SettingsFragment extends Fragment {
     private Switch swScrape;
     private MaterialButton btnSave;
     private MaterialButton btnRepair;
+    private MaterialButton btnClearCache;
+    private MaterialButton btnReset;
     private TextView tvVersion;
     private TextView tvDisclaimer;
     private TextView tvAgreement;
@@ -51,6 +53,8 @@ public class SettingsFragment extends Fragment {
         swScrape = v.findViewById(R.id.sw_scrape);
         btnSave = v.findViewById(R.id.btn_save);
         btnRepair = v.findViewById(R.id.btn_repair);
+        btnClearCache = v.findViewById(R.id.btn_clear_cache);
+        btnReset = v.findViewById(R.id.btn_reset);
         tvVersion = v.findViewById(R.id.tv_version);
         tvDisclaimer = v.findViewById(R.id.tv_disclaimer);
         tvAgreement = v.findViewById(R.id.tv_agreement);
@@ -63,7 +67,7 @@ public class SettingsFragment extends Fragment {
         etXxapi.setText(config.getString("xxapi_key", ""));
         swScrape.setChecked(config.getBool("use_scrape_fallback", true));
 
-        tvVersion.setText(getString(R.string.version_label) + " " + BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
+        tvVersion.setText(getString(R.string.version_label) + " " + getString(R.string.app_version));
 
         btnSave.setOnClickListener(view -> {
             config.setString("apibyte_key", etApibyte.getText().toString().trim());
@@ -75,6 +79,19 @@ public class SettingsFragment extends Fragment {
         });
 
         btnRepair.setOnClickListener(view -> runRepair());
+
+        // 清理本地缓存（对标 Flutter 设置页「数据与缓存」）
+        btnClearCache.setOnClickListener(view -> {
+            MainActivity act = (MainActivity) requireActivity();
+            act.getCache().clearAll();
+            Toast.makeText(getContext(), R.string.settings_cleared, Toast.LENGTH_SHORT).show();
+        });
+
+        // 重置所有设置（API 密钥/兜底开关/关注列表等恢复默认）
+        btnReset.setOnClickListener(view -> {
+            ((MainActivity) requireActivity()).getConfig().reset();
+            Toast.makeText(getContext(), R.string.settings_reset_done, Toast.LENGTH_SHORT).show();
+        });
 
         tvDisclaimer.setOnClickListener(view -> openInfo(R.string.disclaimer_title, R.string.disclaimer_text));
         tvAgreement.setOnClickListener(view -> openInfo(R.string.agreement_title, R.string.agreement_text));
@@ -92,12 +109,20 @@ public class SettingsFragment extends Fragment {
 
     private void runRepair() {
         new Thread(() -> {
+            // 后台线程：先守卫，避免 Fragment 已 detached 后 requireActivity() 抛 IllegalStateException
+            if (getActivity() == null || isDetached()) return;
             MainActivity act = (MainActivity) requireActivity();
             RepairCenter repair = new RepairCenter(act.getConfig(), act.getCache());
             final List<RepairCenter.RepairResult> report = repair.runRepair();
-            requireActivity().runOnUiThread(() -> showReport(report));
+            requireActivity().runOnUiThread(() -> {
+                // 回到 UI 线程：用户已退出则直接返回，避免闪退
+                if (getActivity() == null || isDetached()) return;
+                showReport(report);
+            });
         }).start();
-  List<RepairCenter.RepairResult> report) {
+    }
+
+    private void showReport(List<RepairCenter.RepairResult> report) {
         StringBuilder sb = new StringBuilder();
         for (RepairCenter.RepairResult r : report) {
             String mark = r.ok ? "✓ " : (r.fixed ? "🔧 " : "✗ ");

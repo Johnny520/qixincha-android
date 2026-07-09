@@ -1,5 +1,8 @@
 package com.qxx.johnny.net;
 
+import android.content.Context;
+
+import com.qxx.johnny.R;
 import com.qxx.johnny.model.Company;
 import com.qxx.johnny.store.CacheStore;
 import com.qxx.johnny.store.ConfigStore;
@@ -33,10 +36,19 @@ public class CompanyFetcher {
 
     private final ConfigStore config;
     private final CacheStore cache;
+    private final String defaultTip;
 
-    public CompanyFetcher(ConfigStore config, CacheStore cache) {
+    public CompanyFetcher(Context ctx, ConfigStore config, CacheStore cache) {
         this.config = config;
         this.cache = cache;
+        // 详情默认提示文案与 strings.xml 的 detail_tip_default 引用同一份，消除硬编码不一致
+        String tip;
+        try {
+            tip = ctx.getApplicationContext().getString(R.string.detail_tip_default);
+        } catch (Exception e) {
+            tip = "未配置 API 密钥，仅展示基础信息（来自网页抓取）。可在「设置」中填入免费 API 密钥以获取完整工商数据。";
+        }
+        this.defaultTip = tip;
     }
 
     private String getHtml(String urlStr) {
@@ -159,7 +171,7 @@ public class CompanyFetcher {
 
     public Company getDetail(String name) {
         Company c = new Company(name);
-        c.extra.put("提示", "未配置 API 密钥，仅展示基础信息（来自网页抓取）。可在「设置」中填入免费 API 密钥以获取完整工商数据。");
+        c.extra.put("提示", defaultTip);
         try {
             String cacheKey = "detail:" + name;
             if (cache.contains(cacheKey)) {

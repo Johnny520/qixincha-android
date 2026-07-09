@@ -54,11 +54,12 @@ public class RepairCenter {
         }
     }
 
-    /** 配置完整性检测 */
+    /** 配置完整性检测：真正探测损坏（类型异常/读写失败），损坏时 autoRepair 会 reset、runRepair 会报告并修复 */
     public RepairResult checkConfig() {
         try {
-            config.getFollowList();
-            config.getString("apibyte_key", "");
+            if (config.isCorrupted()) {
+                return new RepairResult("配置文件", false, "配置读写校验失败，可能已损坏。");
+            }
             return new RepairResult("配置文件", true, "配置读写正常。");
         } catch (Exception e) {
             return new RepairResult("配置文件", false, "配置读取失败：" + e.getMessage());

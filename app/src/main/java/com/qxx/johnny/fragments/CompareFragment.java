@@ -1,5 +1,6 @@
 package com.qxx.johnny.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class CompareFragment extends Fragment {
         String a = etA.getText().toString().trim();
         String b = etB.getText().toString().trim();
         if (a.isEmpty() || b.isEmpty()) {
+            if (getContext() == null) return;
             colA.removeAllViews();
             colB.removeAllViews();
             addInfo(colA, getString(R.string.compare_empty));
@@ -56,10 +58,14 @@ public class CompareFragment extends Fragment {
         colB.removeAllViews();
 
         new Thread(() -> {
+            // 后台线程：先守卫，避免 Fragment 已 detached 后 requireActivity() 抛 IllegalStateException
+            if (getContext() == null || isDetached() || isRemoving()) return;
             CompanyFetcher f = ((MainActivity) requireActivity()).getFetcher();
             final Company ca = f.getDetail(a);
             final Company cb = f.getDetail(b);
             requireActivity().runOnUiThread(() -> {
+                // 回到 UI 线程：Fragment 已 detached/销毁时直接返回，避免崩溃
+                if (getContext() == null || isDetached() || isRemoving()) return;
                 pb.setVisibility(View.GONE);
                 fill(colA, ca);
                 fill(colB, cb);
@@ -68,8 +74,11 @@ public class CompareFragment extends Fragment {
     }
 
     private void fill(LinearLayout col, Company c) {
+        // fill 内改用 getContext() 并判空，杜绝 detached 后 requireContext() 抛异常
+        Context ctx = getContext();
+        if (ctx == null) return;
         col.removeAllViews();
-        LinearLayout card = new LinearLayout(getContext());
+        LinearLayout card = new LinearLayout(ctx);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setBackgroundResource(R.drawable.bg_edittext);
         card.setPadding(16, 16, 16, 16);
@@ -84,21 +93,29 @@ public class CompareFragment extends Fragment {
         } else {
             addRow(card, getString(R.string.compare_no_data), false);
         }
+        // 一并展示 extra（数据来源/提示等），对标 Flutter compare_screen
+        for (Map.Entry<String, String> e : c.extra.entrySet()) {
+            addRow(card, e.getKey() + "：" + e.getValue(), false);
+        }
         col.addView(card);
     }
 
     private void addInfo(LinearLayout col, String text) {
-        TextView t = new TextView(getContext());
+        Context ctx = getContext();
+        if (ctx == null) return;
+        TextView t = new TextView(ctx);
         t.setText(text);
-        t.setTextColor(ContextCompat.getColor(requireContext(), R.color.sub));
+        t.setTextColor(ContextCompat.getColor(ctx, R.color.sub));
         col.addView(t);
     }
 
     private void addRow(LinearLayout card, String text, boolean bold) {
-        TextView t = new TextView(getContext());
+        Context ctx = getContext();
+        if (ctx == null) return;
+        TextView t = new TextView(ctx);
         t.setText(text);
         t.setTextSize(bold ? 17 : 14);
-        t.setTextColor(ContextCompat.getColor(requireContext(), bold ? R.color.text : R.color.sub));
+        t.setTextColor(ContextCompat.getColor(ctx, bold ? R.color.text : R.color.sub));
         if (bold) t.setPadding(0, 0, 0, 8);
         else t.setPadding(0, 6, 0, 6);
         card.addView(t);

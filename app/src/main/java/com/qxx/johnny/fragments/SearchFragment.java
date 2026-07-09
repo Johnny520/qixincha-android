@@ -70,9 +70,13 @@ public class SearchFragment extends Fragment {
         listView.setVisibility(View.GONE);
 
         new Thread(() -> {
+            // 后台线程：先守卫，避免 Fragment 已 detached 后 requireActivity() 抛 IllegalStateException
+            if (getContext() == null || isDetached() || isRemoving()) return;
             CompanyFetcher fetcher = ((MainActivity) requireActivity()).getFetcher();
             final List<Company> list = fetcher.search(q);
             requireActivity().runOnUiThread(() -> {
+                // 回到 UI 线程：Fragment 已 detached/销毁时直接返回，避免崩溃
+                if (getActivity() == null || isDetached() || isRemoving()) return;
                 if (list.isEmpty()) {
                     tvStatus.setText(R.string.no_result);
                     listView.setVisibility(View.GONE);
