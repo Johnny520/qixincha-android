@@ -17,4 +17,7 @@
     <!-- 标签底色（浅蓝） -->
     <color name="chip_bg">#E3F2FD</color>
     <color name="chip_text">#1565C0</color>
+
+    <!-- 启动图标自适应图标背景 -->
+    <color name="ic_launcher_background">#1565C0</color>
 </resources>

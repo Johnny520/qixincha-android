@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setTitle(R.string.app_name);
 
         config = new ConfigStore(this);
-        cache = new CacheStore();
-        fetcher = new CompanyFetcher(config, cache);
+        cache = CacheStore.getInstance();
+        fetcher = new CompanyFetcher(this, config, cache);
         repair = new RepairCenter(config, cache);
 
         // 启动自动修复（网络/配置/缓存），修复了才提示
@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
         ft.hide(fCompare);
         ft.hide(fSettings);
         ft.show(fSearch);
-        ft.commit();
+        // 提交改用 commitAllowingStateLoss，避免 onSaveInstanceState 之后提交抛 IllegalStateException
+        ft.commitAllowingStateLoss();
 
         BottomNavigationView nav = findViewById(R.id.bottom_nav);
         nav.setOnItemSelectedListener(item -> {
@@ -98,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
         ft.hide(fCompare);
         ft.hide(fSettings);
         ft.show(f);
-        ft.commit();
+        // 提交改用 commitAllowingStateLoss，避免 onSaveInstanceState 之后提交抛 IllegalStateException
+        ft.commitAllowingStateLoss();
     }
 
     public ConfigStore getConfig() {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.qxx.johnny.model.Company;
@@ -31,24 +32,42 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        container = findViewById(R.id.container);
 
         name = getIntent().getStringExtra("name");
         if (name == null || name.isEmpty()) {
             finish();
             return;
         }
-        setTitle(name);
+
+        // 当前主题为 NoActionBar，手动挂接 MaterialToolbar 提供可见标题与返回按钮
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(name);
+        }
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        container = findViewById(R.id.container);
 
         config = new ConfigStore(this);
-        cache = new CacheStore();
-        fetcher = new CompanyFetcher(config, cache);
+        cache = CacheStore.getInstance();
+        fetcher = new CompanyFetcher(this, config, cache);
 
         ProgressDialog pd = ProgressDialog.show(this, null, getString(R.string.loading), true);
         new Thread(() -> {
             final Company c = fetcher.getDetail(name);
             runOnUiThread(() -> {
-                if (pd != null && pd.isShowing()) pd.dismiss();
+                // 窗口已销毁后 dismiss 可能抛 IllegalArgumentException 或泄漏，需守卫并 try/catch
+                if (pd != null && pd.isShowing()) {
+                    try {
+                        if (!isFinishing() && !isDestroyed()) pd.dismiss();
+                    } catch (IllegalArgumentException ignore) {
+                        // 窗口已 detach，忽略
+                    }
+                }
+                // Activity 已销毁则不再渲染，避免崩溃
+                if (isFinishing() || isDestroyed()) return;
                 render(c);
             });
         }).start();

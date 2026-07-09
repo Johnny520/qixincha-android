@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">企信查</string>
-    <string name="app_version">1.1.0</string>
+    <string name="app_version">1.3.0</string>
 
     <!-- 导航 -->
     <string name="tab_search">搜索</string>
@@ -43,6 +43,14 @@
     <string name="settings_repair">修复中心</string>
     <string name="settings_repair_desc">如遇网络异常、配置损坏、缓存错误，可一键诊断与修复。</string>
     <string name="settings_run_repair">运行修复</string>
+
+    <!-- 数据与缓存（对标 Flutter 设置页） -->
+    <string name="settings_data_cache">数据与缓存</string>
+    <string name="settings_data_cache_desc">清理内存缓存可释放搜索/详情结果；重置将恢复所有默认设置。</string>
+    <string name="settings_clear_cache">清理本地缓存</string>
+    <string name="settings_reset_all">重置所有设置</string>
+    <string name="settings_cleared">已清理本地缓存</string>
+    <string name="settings_reset_done">已重置所有设置</string>
     <string name="settings_repair_report">修复报告</string>
     <string name="settings_about">关于 / 法律</string>
     <string name="about_title">关于企信查</string>
