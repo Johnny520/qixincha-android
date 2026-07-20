@@ -1,6 +1,16 @@
+/*
+ * 企信查 (qixincha-android)
+ * Copyright © 2026 文强哥 (Johnny520). All rights reserved.
+ */
+
 package com.qxx.johnny.net;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 
 import com.qxx.johnny.R;
 import com.qxx.johnny.model.Company;
@@ -8,7 +18,6 @@ import com.qxx.johnny.store.CacheStore;
 import com.qxx.johnny.store.ConfigStore;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -36,11 +45,13 @@ public class CompanyFetcher {
 
     private final ConfigStore config;
     private final CacheStore cache;
+    private final Context appCtx;
     private final String defaultTip;
 
     public CompanyFetcher(Context ctx, ConfigStore config, CacheStore cache) {
         this.config = config;
         this.cache = cache;
+        this.appCtx = ctx.getApplicationContext();
         // 详情默认提示文案与 strings.xml 的 detail_tip_default 引用同一份，消除硬编码不一致
         String tip;
         try {
@@ -51,10 +62,35 @@ public class CompanyFetcher {
         this.defaultTip = tip;
     }
 
+    /** 判断当前是否有可用网络（需 ACCESS_NETWORK_STATE 权限，已在 Manifest 声明） */
+    public static boolean isNetworkAvailable(Context ctx) {
+        if (ctx == null) return false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager)
+                    ctx.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm == null) return false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Network n = cm.getActiveNetwork();
+                if (n == null) return false;
+                NetworkCapabilities nc = cm.getNetworkCapabilities(n);
+                return nc != null && (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                        || nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                        || nc.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+            } else {
+                NetworkInfo ni = cm.getActiveNetworkInfo();
+                return ni != null && ni.isConnected();
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private String getHtml(String urlStr) {
+        if (!isNetworkAvailable(appCtx)) return null;
+        HttpURLConnection conn = null;
         try {
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("User-Agent", UA);
             conn.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.9");
             conn.setConnectTimeout(TIMEOUT);
@@ -62,21 +98,28 @@ public class CompanyFetcher {
             conn.setInstanceFollowRedirects(true);
             int code = conn.getResponseCode();
             if (code != 200) {
-                conn.disconnect();
                 return null;
             }
-            InputStream in = conn.getInputStream();
-            BufferedReader r = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = r.readLine()) != null) {
-                sb.append(line).append("\n");
+            // try-with-resources 确保流自动关闭，finally 中 disconnect 释放底层连接
+            try (BufferedReader r = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
+                String line;
+                while ((line = r.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
             }
-            r.close();
-            conn.disconnect();
             return sb.toString();
         } catch (Exception e) {
             return null;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.disconnect();
+                } catch (Exception ignore) {
+                    // 忽略关闭异常
+                }
+            }
         }
     }
 
