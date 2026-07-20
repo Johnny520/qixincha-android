@@ -1,3 +1,8 @@
+/*
+ * 企信查 (qixincha-android)
+ * Copyright © 2026 文强哥 (Johnny520). All rights reserved.
+ */
+
 package com.qxx.johnny.fragments;
 
 import android.content.Intent;
@@ -65,6 +70,12 @@ public class SearchFragment extends Fragment {
     private void doSearch() {
         String q = etQuery.getText().toString().trim();
         if (TextUtils.isEmpty(q)) return;
+        if (!CompanyFetcher.isNetworkAvailable(requireContext())) {
+            tvStatus.setVisibility(View.VISIBLE);
+            tvStatus.setText(R.string.net_error);
+            listView.setVisibility(View.GONE);
+            return;
+        }
         tvStatus.setVisibility(View.VISIBLE);
         tvStatus.setText(R.string.loading);
         listView.setVisibility(View.GONE);

@@ -1,3 +1,8 @@
+/*
+ * 企信查 (qixincha-android)
+ * Copyright © 2026 文强哥 (Johnny520). All rights reserved.
+ */
+
 package com.qxx.johnny;
 
 import android.os.Bundle;
@@ -19,6 +24,8 @@ import com.qxx.johnny.store.ConfigStore;
 import com.qxx.johnny.store.RepairCenter;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String KEY_NAV = "nav_sel";
+
     private ConfigStore config;
     private CacheStore cache;
     private CompanyFetcher fetcher;
@@ -29,11 +36,18 @@ public class MainActivity extends AppCompatActivity {
     private CompareFragment fCompare;
     private SettingsFragment fSettings;
 
+    // 记录当前选中的底部导航项，配置变更（旋转等）后恢复，避免总是回到「搜索」
+    private int selectedNavId = R.id.nav_search;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_name);
+
+        if (savedInstanceState != null) {
+            selectedNavId = savedInstanceState.getInt(KEY_NAV, R.id.nav_search);
+        }
 
         config = new ConfigStore(this);
         cache = CacheStore.getInstance();
@@ -74,22 +88,38 @@ public class MainActivity extends AppCompatActivity {
             fSettings = new SettingsFragment();
             ft.add(R.id.nav_host, fSettings, "settings");
         }
+        ft.hide(fSearch);
         ft.hide(fFollow);
         ft.hide(fCompare);
         ft.hide(fSettings);
-        ft.show(fSearch);
+        ft.show(fragmentFor(selectedNavId));
         // 提交改用 commitAllowingStateLoss，避免 onSaveInstanceState 之后提交抛 IllegalStateException
         ft.commitAllowingStateLoss();
 
         BottomNavigationView nav = findViewById(R.id.bottom_nav);
+        nav.setSelectedItemId(selectedNavId);
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            selectedNavId = id;
             if (id == R.id.nav_search) show(fSearch);
             else if (id == R.id.nav_follow) show(fFollow);
             else if (id == R.id.nav_compare) show(fCompare);
             else if (id == R.id.nav_settings) show(fSettings);
             return true;
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_NAV, selectedNavId);
+    }
+
+    private Fragment fragmentFor(int id) {
+        if (id == R.id.nav_follow) return fFollow;
+        if (id == R.id.nav_compare) return fCompare;
+        if (id == R.id.nav_settings) return fSettings;
+        return fSearch;
     }
 
     private void show(Fragment f) {
