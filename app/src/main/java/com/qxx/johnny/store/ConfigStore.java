@@ -1,3 +1,8 @@
+/*
+ * 企信查 (qixincha-android)
+ * Copyright © 2026 文强哥 (Johnny520). All rights reserved.
+ */
+
 package com.qxx.johnny.store;
 
 import android.content.Context;

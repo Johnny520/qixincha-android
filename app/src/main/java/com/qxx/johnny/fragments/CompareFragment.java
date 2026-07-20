@@ -1,3 +1,8 @@
+/*
+ * 企信查 (qixincha-android)
+ * Copyright © 2026 文强哥 (Johnny520). All rights reserved.
+ */
+
 package com.qxx.johnny.fragments;
 
 import android.content.Context;
@@ -19,6 +24,8 @@ import com.qxx.johnny.MainActivity;
 import com.qxx.johnny.R;
 import com.qxx.johnny.model.Company;
 import com.qxx.johnny.net.CompanyFetcher;
+
+import java.util.Map;
 
 public class CompareFragment extends Fragment {
     private EditText etA;
