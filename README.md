@@ -3,7 +3,7 @@
 企业工商信息查询 App（Android / Java 原生，Material 组件），类天眼查/爱企查风格的移动端工具。
 
 - **包名 / 应用 ID**：`com.qxx.johnny`（保持不变，改了会破坏全部引用）
-- **作者 / 版权人**：文强哥 / Johnny520
+- **作者 / 版权人**：文强哥 (Johnny520)
 - **兼容范围**：Android 7.0（API 24）~ Android 16（官方 SDK，无第三方运行时，闪退风险最低）
 - **技术栈**：Android + Java 17 + Material Components + AndroidX
 
@@ -24,7 +24,7 @@
 ./gradlew assembleRelease
 ```
 
-Release 包使用 debug keystore 直接签名，生成的 APK 可直接安装。
+Release 包使用仓库 Secrets 中的正式签名密钥（SIGNING_KEY / KEY_ALIAS / KEY_STORE_PASSWORD / KEY_PASSWORD）签名，生成的 APK 可直接安装。
 
 ## 权限说明
 
@@ -37,7 +37,7 @@ Release 包使用 debug keystore 直接签名，生成的 APK 可直接安装。
 
 Copyright © 2026 文强哥 (Johnny520). 保留所有权利。
 
-- GitHub：Johnny520
+- GitHub: https://github.com/Johnny520
 - 本项目以 MIT 协议开源，详见 [LICENSE](LICENSE)。
 
 ## 许可证

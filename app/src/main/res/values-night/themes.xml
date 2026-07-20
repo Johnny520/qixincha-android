@@ -1,13 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Qixincha" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:colorBackground">@color/bg</item>
-        <item name="colorSurface">@color/bg</item>
-        <item name="android:statusBarColor">@color/primary</item>
-    </style>
-
-    <!-- 液态玻璃 UI（默认主题 · 日间） -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 液态玻璃 UI（默认主题 · 夜间） -->
     <style name="Theme.LiquidGlass" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/glass_window_bg</item>
         <item name="colorPrimary">@color/glass_primary</item>
@@ -22,6 +15,6 @@
         <item name="colorOutline">@color/glass_outline</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/glass_nav</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
